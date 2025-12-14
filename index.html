@@ -4,127 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Birthday Party RSVP</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f7f7ff;
+            background-image: url('https://wallpapercave.com/wp/wp6608597.jpg'); /* <-- Replace with your chosen neon controller image */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             padding: 20px;
-            max-width: 700px;
+            max-width: 800px;
             margin: auto;
         }
-        h1 {
+
+        h1, h2 {
             text-align: center;
-            color: #333;
-        }
-        .card {
-            background: white;
-            padding: 20px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 10px 15px;
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
         }
-        label {
-            font-weight: bold;
+
+        .card {
+            background: rgba(0,0,0,0.65);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            margin-top: 25px;
+            color: #fff;
         }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        #thankyou {
-            display: none;
-            padding: 15px;
-            background: #e8ffe8;
-            border: 1px solid #b6e6b6;
-            border-radius: 8px;
+
+        .iframe-container {
             margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.3);
         }
     </style>
 </head>
+
 <body>
 
-<h1>🎉 RSVP for the Birthday Party!</h1>
+    <h1>🎮 Game On! You're Invited!</h1>
+    <h2>Please RSVP Below</h2>
 
-<div class="card">
-    <h2>Let us know if you can make it</h2>
-    <form id="rsvpForm">
-        <label>Name</label>
-        <input type="text" id="name" required>
+    <div class="card">
+        <p style="font-size: 18px; text-align: center;">
+            We can’t wait to celebrate with you.  
+            Please fill out the RSVP form below.
+        </p>
 
-        <label>Will you attend?</label>
-        <select id="attendance" required>
-            <option value="">Select...</option>
-            <option value="Yes">Yes, we'll be there!</option>
-            <option value="No">Sorry, can't make it</option>
-        </select>
-
-        <label>Number of Guests</label>
-        <input type="number" id="guests" min="1" value="1">
-
-        <label>Message (optional)</label>
-        <textarea id="message" rows="3"></textarea>
-
-        <button type="submit">Submit RSVP</button>
-    </form>
-
-    <div id="thankyou">✅ Thank you! Your RSVP has been recorded.</div>
-</div>
-
-<script>
-    const AIRTABLE_TOKEN = "patdbOb4CLrzAk7uz.a8286f6d9b49fede0e91f4cdebc2a004ccb5f0d25bda84d162125d4325ab78ff";
-    const BASE_ID = "Kunal12RSVP";
-    const TABLE_ID = "RSVP";
-
-    document.getElementById("rsvpForm").addEventListener("submit", async function(e) {
-        e.preventDefault();
-
-        const data = {
-            records: [
-                {
-                    fields: {
-                        name: document.getElementById("name").value,
-                        attendance: document.getElementById("attendance").value,
-                        guests: parseInt(document.getElementById("guests").value),
-                        message: document.getElementById("message").value
-                    }
-                }
-            ]
-        };
-
-        try {
-            await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${AIRTABLE_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
-
-            document.getElementById("thankyou").style.display = "block";
-            document.getElementById("rsvpForm").reset();
-
-        } catch (error) {
-            alert("Error saving RSVP. Please try again.");
-        }
-    });
-</script>
+        <div class="iframe-container">
+            <iframe 
+                class="airtable-embed"
+                src="https://airtable.com/embed/appm0vKaltn56dvuW/shrelSfyZl41Ze0ev"
+                frameborder="0"
+                width="100%"
+                height="600"
+                style="background: transparent;">
+            </iframe>
+        </div>
+    </div>
 
 </body>
 </html>
-
