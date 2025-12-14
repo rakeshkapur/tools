@@ -46,18 +46,13 @@
         button:hover {
             background: #45a049;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background: #eee;
+        #thankyou {
+            display: none;
+            padding: 15px;
+            background: #e8ffe8;
+            border: 1px solid #b6e6b6;
+            border-radius: 8px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -86,60 +81,48 @@
 
         <button type="submit">Submit RSVP</button>
     </form>
-</div>
 
-<div class="card">
-    <h2>Guest Responses</h2>
-    <table id="guestTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Attending</th>
-                <th>Guests</th>
-                <th>Message</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div id="thankyou">✅ Thank you! Your RSVP has been recorded.</div>
 </div>
 
 <script>
-    const form = document.getElementById("rsvpForm");
-    const tableBody = document.querySelector("#guestTable tbody");
+    const AIRTABLE_TOKEN = "patdbOb4CLrzAk7uz.a8286f6d9b49fede0e91f4cdebc2a004ccb5f0d25bda84d162125d4325ab78ff";
+    const BASE_ID = "KunalRSVP";
+    const TABLE_ID = "RSVP";
 
-    // Load saved RSVPs
-    let rsvps = JSON.parse(localStorage.getItem("rsvps")) || [];
-    renderTable();
-
-    form.addEventListener("submit", function(e) {
+    document.getElementById("rsvpForm").addEventListener("submit", async function(e) {
         e.preventDefault();
 
-        const entry = {
-            name: document.getElementById("name").value,
-            attendance: document.getElementById("attendance").value,
-            guests: document.getElementById("guests").value,
-            message: document.getElementById("message").value
+        const data = {
+            records: [
+                {
+                    fields: {
+                        name: document.getElementById("name").value,
+                        attendance: document.getElementById("attendance").value,
+                        guests: parseInt(document.getElementById("guests").value),
+                        message: document.getElementById("message").value
+                    }
+                }
+            ]
         };
 
-        rsvps.push(entry);
-        localStorage.setItem("rsvps", JSON.stringify(rsvps));
+        try {
+            await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${AIRTABLE_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
 
-        renderTable();
-        form.reset();
+            document.getElementById("thankyou").style.display = "block";
+            document.getElementById("rsvpForm").reset();
+
+        } catch (error) {
+            alert("Error saving RSVP. Please try again.");
+        }
     });
-
-    function renderTable() {
-        tableBody.innerHTML = "";
-        rsvps.forEach(rsvp => {
-            const row = `<tr>
-                <td>${rsvp.name}</td>
-                <td>${rsvp.attendance}</td>
-                <td>${rsvp.guests}</td>
-                <td>${rsvp.message}</td>
-            </tr>`;
-            tableBody.innerHTML += row;
-        });
-    }
 </script>
 
 </body>
